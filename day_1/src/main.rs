@@ -1,6 +1,10 @@
 use std::fs;
 
 fn main() {
+    part_1();
+}
+
+fn part_1() {
     let contents = fs::read_to_string("data/data.txt").expect("Should have been able to read the file");
 
     let split = contents.lines();
