@@ -8,13 +8,16 @@ struct Round {
 fn main() {
     let rounds = process_input();
 
-    let mut total_score = 0;
+    let mut total_score_part_1 = 0;
+    let mut total_score_part_2 = 0;
 
     for round in rounds {
-        total_score += score_round(round);
+        total_score_part_1 += score_round_part_1(&round);
+        total_score_part_2 += score_round_part_2(&round);
     }
 
-    println!("{}", total_score);
+    println!("Part 1: {}", total_score_part_1);
+    println!("Part 2: {}", total_score_part_2);
 }
 
 fn process_input() -> Vec<Round> {
@@ -35,21 +38,21 @@ fn process_input() -> Vec<Round> {
     return rounds;
 }
 
-fn score_play(round: Round) -> i32 {
+fn score_play(my_play: char) -> i32 {
     let mut score = 0;
 
-    if round.my_choice == 'X' {
+    if my_play == 'X' {
         score = 1;
-    } else if round.my_choice == 'Y' {
+    } else if my_play == 'Y' {
         score = 2;
-    } else if round.my_choice == 'Z' {
+    } else if my_play == 'Z' {
         score = 3;
     }
 
     return score;
 }
 
-fn score_round(round: Round) -> i32 {
+fn score_round_part_1(round: &Round) -> i32 {
     let mut score = 0;
 
     if round.my_choice == 'X' {
@@ -78,5 +81,41 @@ fn score_round(round: Round) -> i32 {
         }
     }
     
-    return score + score_play(round);
+    return score + score_play(round.my_choice);
+}
+
+fn score_round_part_2(round: &Round) -> i32 {
+    let mut score = 0;
+    let mut play = 'X';
+
+    if round.my_choice == 'X' {
+        score = 0;
+        if round.opp_choice == 'A' {
+            play = 'Z';
+        } else if round.opp_choice == 'B' {
+            play = 'X';
+        } else if round.opp_choice == 'C' {
+            play = 'Y';
+        }
+    } else if round.my_choice == 'Y' {
+        score = 3;
+        if round.opp_choice == 'A' {
+            play = 'X';
+        } else if round.opp_choice == 'B' {
+            play = 'Y';
+        } else if round.opp_choice == 'C' {
+            play = 'Z';
+        }
+    } else if round.my_choice == 'Z' {
+        score = 6;
+        if round.opp_choice == 'A' {
+            play = 'Y';
+        } else if round.opp_choice == 'B' {
+            play = 'Z';
+        } else if round.opp_choice == 'C' {
+            play = 'X';
+        }
+    }
+    
+    return score + score_play(play);
 }
