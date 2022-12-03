@@ -2,6 +2,11 @@ use std::fs;
 use std::collections::HashSet;
 
 fn main() {
+    part_1();
+    part_2();
+}
+
+fn part_1() {
     let contents = fs::read_to_string("data/data.txt").expect("Should have been able to read the file");
     let split = contents.lines();
     let lines = split.collect::<Vec<&str>>();
@@ -19,7 +24,59 @@ fn main() {
         }
     } 
 
-    println!("Sum of Priorities: {}", sum);
+    println!("Sum of Priorities (Part 1): {}", sum);
+}
+
+fn part_2() {
+    let contents = fs::read_to_string("data/data.txt").expect("Should have been able to read the file");
+    let split = contents.lines();
+    let lines = split.collect::<Vec<&str>>();
+
+    let mut sum = 0;
+    let to_zero = u32::from('a');
+
+    let mut set_vector: Vec<HashSet<char>> = Vec::new();
+    set_vector.push(HashSet::new());
+    set_vector.push(HashSet::new());
+    set_vector.push(HashSet::new());
+
+    for (i, line) in lines.iter().enumerate() {
+        
+        if i % 3 == 0  && i != 0{
+
+            for x in set_vector[0].intersection(&set_vector[1]) {
+                if set_vector[2].contains(&x) {
+                    if x.is_uppercase() {
+                        sum += u32::from(x.to_ascii_lowercase()) - to_zero + 27;
+                    } else {
+                        sum += u32::from(x.to_ascii_lowercase()) - to_zero + 1;
+            
+                    }
+                }
+            }
+            
+            for item in set_vector.iter_mut() {
+                item.clear();
+            }
+        }
+
+        for x in line.chars() {
+            set_vector[i % 3].insert(x);
+        }
+    }
+
+    for x in set_vector[0].intersection(&set_vector[1]) {
+        if set_vector[2].contains(&x) {
+            if x.is_uppercase() {
+                sum += u32::from(x.to_ascii_lowercase()) - to_zero + 27;
+            } else {
+                sum += u32::from(x.to_ascii_lowercase()) - to_zero + 1;
+    
+            }
+        }
+    }
+
+    println!("Sum of Priorities (Part 2): {}", sum);
 }
 
 fn find_same_char(line: &str) -> char {
